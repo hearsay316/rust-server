@@ -1,22 +1,26 @@
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 use std::{fs, thread, time};
-
+use mylib::ThreadPool;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7978").unwrap();
-    let mut thread_vec :Vec<thread::JoinHandle<()>> = Vec::new();
+    let pool = ThreadPool::new(4);
+    // let mut thread_vec :Vec<thread::JoinHandle<()>> = Vec::new();
     for stream in listener.incoming() {
         let stream = stream.unwrap();
-        // println!("连上了");
-        // 创建线程
-     let handle =    thread::spawn(move || {
+        pool.execute(||{
             handle_connection(stream)
         });
-        thread_vec.push(handle)
+        // println!("连上了");
+        // 创建线程
+     // let handle =    thread::spawn(move || {
+     //        handle_connection(stream)
+     //    });
+        // thread_vec.push(handle)
     }
-    for handle in thread_vec{
-        handle.join().unwrap();
-    }
+    // for handle in thread_vec{
+    //     handle.join().unwrap();
+    // }
 }
 
 fn handle_connection(mut stream: TcpStream) {
