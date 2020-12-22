@@ -1,6 +1,6 @@
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
-use std::{fs, thread};
+use std::{fs, thread, time};
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7978").unwrap();
@@ -27,6 +27,8 @@ fn handle_connection(mut stream: TcpStream) {
     let response = format!("HTTP/1.1 200 OK\r\n\r\n{}", contents);
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
+    let  te = time::Duration::from_millis(10000);
+    thread::sleep(te);
     // println!("request:{}",String::from_utf8_lossy(&buffer[..]));
 }
 // fn handle_connection(mut stream: TcpStream) {
